@@ -75,7 +75,7 @@ else:
 Alright, that's everything for querying the database for a single user. For getting everything, it's slightly more complicated. First, we have to fetch all the grandfathered users:
 
 ```python
-# be careful running this in ilde, it will freeze if you try to print this out. Depending on what you're trying 
+# be careful running this in idle, it will freeze if you try to print this out. Depending on what you're trying 
 # to do, it might be a good idea to look at the source code for this function and parse the response using a smaller
 # buffer. However most servers can handle keeping this small section completely in memory for a bit while you do something
 # with it
