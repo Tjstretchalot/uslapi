@@ -110,7 +110,8 @@ while data:
 You can also update your database once you've finished fetching everything by using the since parameter. You are strongly encouraged to go back in time a bit before you last updated, because these are based on reddit times but you fetch based on what the uslbot knows about at the time. Thus, if you last updated at `last_updated_utc` then you could loop through the new stuff by doing the exact some thing but with
 
 ```
-data = usl.bulk_query(user, offset = offset, since = last_updated_utc)
+fetch_from_time = last_updated_utc - 1000 * 60 * 60 # allow duplicates up to an hour old to make sure we don't miss anything
+data = usl.bulk_query(user, offset = offset, since = fetch_from_time)
 ```
 
 in both of the loop spots. As a warning, this function doesn't ever return unbans (which occur, though very infrequently, like once per week). So you should refetch the database to clear those maybe once every 1-3 months, or just verify hits against the query endpoint.
