@@ -1,6 +1,6 @@
 """Provides the usl class which is an extremely light wrapper around the usl endpoints"""
 
-import requests 
+import requests
 import json
 from datetime import datetime
 from .exceptions import *
@@ -11,8 +11,8 @@ class UniversalScammerList(object):
 
     You can obtain this class via
 
-    .. code-block:: python 
-        
+    .. code-block:: python
+
         import uslapi
 
         usl = uslapi.UniversalScammerList('bot by /u/myusername for <reason for bot>')
@@ -55,12 +55,12 @@ class UniversalScammerList(object):
         session_id_cookie = None
         for cookie in rawresponse.cookies:
             if cookie.name == 'session_id':
-                session_id_cookie = cookie 
+                session_id_cookie = cookie
                 break
 
         if not session_id_cookie:
             raise MalformedAPIException('Got success response from login but no session id cookie was set', rawresponse)
-        
+
         session_id = session_id_cookie.value
         session_expires_at = session_id_cookie.expires
 
@@ -75,7 +75,7 @@ class UniversalScammerList(object):
 
         if rawresponse.status_code < 200 or rawresponse.status_code >= 300:
             raise USLException('Got bad status code from logout page', rawresponse.status_code, rawresponse)
-        
+
         user.session_id = None
         user.session_expires_at = None
 
@@ -83,9 +83,9 @@ class UniversalScammerList(object):
         """
         Query the database for a single person which matches the given query. By default,
         this returns if that user is banned and a best-guess for the most pertinent message
-        to go along with the ban. 
+        to go along with the ban.
 
-        If format is 2, this returns a list of a persons and their history on every subreddit that 
+        If format is 2, this returns a list of a persons and their history on every subreddit that
         matches the hashtags.
 
         If hashtags is set, it can be a list of tags, for example [ '#scammer', '#sketchy' ]. If your
@@ -99,26 +99,26 @@ class UniversalScammerList(object):
             hashtags = [ '#scammer', '#sketchy', '#troll' ]
 
         rawresponse = requests.get(self.api_url + 'query.php', params = { 'format': format, 'hashtags': ','.join(hashtags), 'query': query }, cookies = { 'session_id': user.session_id })
-        
+
         jsonresponse = rawresponse.json()
 
         if not jsonresponse['success']:
             raise StandardAPIException(jsonresponse['error_type'], jsonresponse['error_message'])
-        
+
         return jsonresponse['data']
 
     def bulk_query(self, user, offset = None, since = None):
         """
         Query the database in bulk.
 
-        If both the offset and since are None, then this gets a list of all the grandfathered users in the database, in the form 
+        If both the offset and since are None, then this gets a list of all the grandfathered users in the database, in the form
         [ { username: 'johndoe', traditional: True, ban_reason: 'grandfathered' }, ... ]
 
         If the offset is not null but since is null, then if offset is 0 then this returns the first batch of people in the banlist that
         were not grandfathered. After that, the offset returns a batch but skips the first offset people.
 
-        If offset is not null and since is not null, then this returns in the same manner as when since is null but ignores any bans that 
-        occurred after since. Note that this method will never seem to unban people, so you should periodically (perhaps once a month) 
+        If offset is not null and since is not null, then this returns in the same manner as when since is null but ignores any bans that
+        occurred after since. Note that this method will never seem to unban people, so you should periodically (perhaps once a month)
         refresh the database from scratch. Alternatively, if you don't get many hits, just verify using the query endpoint.
 
         Since should be a utc timestamp in milliseconds to be passed to the api, but datetimes are converted on your behalf. The returned
@@ -126,7 +126,7 @@ class UniversalScammerList(object):
         """
         if since is not None and since is datetime:
             since = math.floor((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000)
-        
+
         rawresponse = requests.get(self.api_url + 'bulk_query.php', params = { 'offset': offset, 'since': since })
 
         jsonresponse = rawresponse.json()

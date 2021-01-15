@@ -23,7 +23,7 @@ class StandardAPIException(USLException):
         :param error_type: a string constant for detecting the specific type of error, based on the response
         :param error_message: a human-readable description of the error
         """
-        
+
         super(StandardAPIException, self).__init__(error_type + ': ' + error_message)
         self.error_type = error_type
         self.error_message = error_message
