@@ -135,3 +135,36 @@ class UniversalScammerList(object):
             raise StandardAPIException(jsonresponse['error_type'], jsonresponse['error_message'])
 
         return jsonresponse['data']
+
+    def bulk_query2(self, user, start_id = 0, limit = 250):
+        """Uses the new version of the bulk query endpoint, which tends to
+        timeout less often when being walked.
+
+        Performs a bulk query of users who are on the universal scammer list.
+        Only available while the bot is not propagating.
+
+        This endpoint assumes you are querying for the common tags '#scammer',
+        '#sketchy', and '#troll'. The returned "next_id" is used as the
+        start_id of the next request, until it is None.
+
+        Returns:
+        {
+          bans: [ { ... }, { ... }, ... ],
+          next_id: int
+        }
+        """
+        rawresponse = requests.get(
+            self.api_url + 'bulk_query.php',
+            params = {
+                'version': 2,
+                'start_id': start_id,
+                'limit': limit
+            }
+        )
+
+        jsonresponse = rawresponse.json()
+
+        if not jsonresponse['success']:
+            raise StandardAPIException(jsonresponse['error_type'], jsonresponse['error_message'])
+
+        return jsonresponse['data']
