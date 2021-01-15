@@ -7,7 +7,7 @@ usl = uslapi.UniversalScammerList('bot uslapi_tests by tjstretchalot')
 input("Press Enter to continue...")
 
 print('logging in...')
-user = usl.login('tjstretchalot', 'w29nhFWdvPGMlwI', '1day') # you need to fill this in with your data
+user = usl.login('username', 'password', '1day') # you need to fill this in with your data
 
 print('login success')
 print(user.session_id)
